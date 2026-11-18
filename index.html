@@ -5,116 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file:; img-src 'self' file:; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="no-referrer">
-  <meta name="color-scheme" content="light dark">
-  <meta name="description" content="Proyecto estudiantil: un escáner de ingeniería social simple para ver en vivo cómo detecta palabras sospechosas y entender por qué acierta y por qué falla.">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#1a1b1f">
+  <meta name="description" content="Herramienta interactiva de estudio: cómo funciona un detector de phishing por reglas, cómo acierta y falla con cuatro casos, y por qué no es suficiente.">
   <title>Escáner de ingeniería social</title>
   <link rel="icon" href="assets/icono.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
-  <a class="saltar" href="#contenido">Ir al contenido</a>
+  <a class="saltar" href="#pantalla">Ir al contenido</a>
 
   <header class="barra">
-    <div class="barra-in">
-      <a class="marca" href="#inicio">
-        <img src="assets/icono.svg" alt="" width="28" height="28">
-        <span>Escáner de ingeniería social</span>
-      </a>
-      <nav aria-label="Secciones">
-        <ul>
-          <li><a href="#casos">Casos</a></li>
-          <li><a href="#probar">Tu mensaje</a></li>
-          <li><a href="#reglas">Reglas</a></li>
-        </ul>
-      </nav>
-    </div>
+    <button type="button" class="marca" id="ir-inicio"><img src="assets/icono.svg" alt="" width="24" height="24">Escáner de ingeniería social</button>
+    <nav id="capitulos" class="capitulos" aria-label="Capítulos" hidden>
+      <button type="button"><span class="cap-num">01</span> <span class="cap-nombre">Cómo funciona</span></button>
+      <button type="button"><span class="cap-num">02</span> <span class="cap-nombre">Cuatro casos</span></button>
+      <button type="button"><span class="cap-num">03</span> <span class="cap-nombre">Más allá de las reglas</span></button>
+      <button type="button"><span class="cap-num">04</span> <span class="cap-nombre">Pruébalo tú</span></button>
+    </nav>
   </header>
 
-  <main id="contenido">
-    <section class="hero" id="inicio" aria-labelledby="titulo-hero">
-      <div class="hero-texto">
-        <p class="antetitulo">Proyecto estudiantil · aprender haciendo</p>
-        <h1 id="titulo-hero">¿Puede un detector de palabras reconocer una estafa?</h1>
-        <p class="bajada">
-          Un escáner simple de ingeniería social para verlo funcionar en vivo y entender
-          <strong>por qué acierta</strong> y, sobre todo, <strong>por qué falla</strong>.
-          Cuatro casos guiados y un espacio para probar tus propios mensajes.
-        </p>
-        <div class="hero-acciones">
-          <a class="boton primario" href="#casos">Recorrer los 4 casos</a>
-          <a class="boton" href="#probar">Probar con tu mensaje</a>
-        </div>
-      </div>
-      <figure class="hero-demo" aria-label="Ejemplo de mensaje analizado">
-        <div class="tarjeta-correo">
-          <div class="correo-cabeza">
-            <span class="punto"></span><span class="punto"></span><span class="punto"></span>
-          </div>
-          <pre class="mensaje" id="hero-mensaje"></pre>
-        </div>
-        <figcaption id="hero-pie"></figcaption>
-      </figure>
-    </section>
+  <main id="pantalla" class="pantalla"></main>
 
-    <section class="seccion" id="casos" aria-labelledby="titulo-casos">
-      <div class="seccion-cabeza">
-        <p class="antetitulo">Ejemplos guiados</p>
-        <h2 id="titulo-casos">Cuatro casos, una historia</h2>
-        <p>Dos veces el detector acierta y dos veces falla. Antes de ver cada resultado, haz tu predicción.</p>
-      </div>
-      <ol class="pasos-casos" id="lista-casos"></ol>
-      <article class="caso" id="caso" aria-live="off"></article>
-      <div class="matriz-bloque" id="matriz"></div>
-    </section>
+  <footer class="pie">herramienta interactiva de estudio</footer>
 
-    <section class="seccion" id="probar" aria-labelledby="titulo-probar">
-      <div class="seccion-cabeza">
-        <p class="antetitulo">Tu turno</p>
-        <h2 id="titulo-probar">Prueba con tu propio mensaje</h2>
-        <p>Pega un correo o un SMS, o intenta escribir una estafa que el detector no vea. El análisis se hace aquí mismo: <strong>el texto no sale de tu navegador</strong>.</p>
-      </div>
-      <div class="probar">
-        <div class="probar-entrada">
-          <label for="entrada" class="etiqueta">Mensaje</label>
-          <textarea id="entrada" rows="10" spellcheck="false" placeholder="Pega aquí un mensaje…"></textarea>
-          <div class="probar-acciones">
-            <label class="boton chico" for="archivo">Abrir .txt</label>
-            <input type="file" id="archivo" accept=".txt,text/plain" class="oculto-visual">
-            <button type="button" class="boton chico" id="limpiar">Borrar</button>
-            <span class="probar-nota" id="archivo-nota" role="status"></span>
-          </div>
-          <p class="etiqueta">Así lo ve el detector</p>
-          <pre class="mensaje vista-previa" id="vista"></pre>
-        </div>
-        <div class="probar-resultado" id="resultado-propio"></div>
-        <p class="oculto-visual" id="resumen-vivo" role="status"></p>
-      </div>
-    </section>
-
-    <section class="seccion" id="reglas" aria-labelledby="titulo-reglas">
-      <div class="seccion-cabeza">
-        <p class="antetitulo">Por dentro</p>
-        <h2 id="titulo-reglas">Las reglas del detector</h2>
-        <p>Son listas fijas de palabras, igual que en la versión de terminal (<code>scanner.sh</code>). Saber exactamente qué buscan es lo que permite evadirlas.</p>
-      </div>
-      <div class="reglas" id="lista-reglas"></div>
-      <div class="como-funciona">
-        <h3>Cómo cuenta los puntos</h3>
-        <ul>
-          <li>Pasa el texto a minúsculas y le quita las tildes: «ÚLTIMO AVISO» cuenta igual que «ultimo aviso».</li>
-          <li>Busca <strong>palabras completas</strong>: «bancario» no activa «banco».</li>
-          <li>Acepta plural y femenino: «bono» también detecta «bonos»; «exclusivo», «exclusiva». Solo en las palabras que terminan en <em>o</em>, así que «directora» se le escapa.</li>
-          <li>Cada palabra suma <strong>1 punto</strong>, aunque aparezca varias veces.</li>
-        </ul>
-        <div class="escala" id="escala"></div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="pie">
-    <p>Proyecto estudiantil de aprendizaje · <a href="https://github.com/fabian-uv/social-engineering-scanner/blob/main/LICENSE">Licencia MIT</a> · <a href="https://github.com/fabian-uv/social-engineering-scanner">Código</a></p>
-    <p class="pie-nota">Los mensajes de los ejemplos son ficticios. Esta herramienta sirve para aprender; no protege tu correo.</p>
-  </footer>
+  <noscript><p class="sin-js">Esta página necesita JavaScript. El análisis se hace en tu navegador; nada se envía a internet.</p></noscript>
 
   <script src="js/motor.js"></script>
   <script src="js/casos.js"></script>

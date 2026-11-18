@@ -8,9 +8,14 @@
  *   3. Falso positivo  → el detector falla: alerta en un mensaje legítimo.
  *   4. Bypass          → el detector falla: deja pasar una estafa.
  *
+ * CAPAS es el capítulo 3: lo que usan los sistemas reales donde las reglas
+ * no alcanzan, y qué caso resuelve cada una.
+ *
  * Las opciones de predicción tienen un rango de puntos (min, max) o, si la
  * pregunta no es de números, un campo `correcta` con su explicación.
  * Las "ocultas" son frases que una persona reconoce y el detector no.
+ * Cada lección tiene un tono que se ve en pantalla: bien (el detector
+ * acertó), mal (falló), aviso (un límite o un riesgo) o neutro (explicación).
  */
 (function (raiz) {
   'use strict';
@@ -45,7 +50,7 @@
       lecciones: [
         {
           titulo: 'Qué ocurrió',
-          tono: 'ok',
+          tono: 'bien',
           parrafos: [
             'El detector funcionó bien.',
             'El texto no tiene palabras de urgencia, autoridad ni promesas. Es solo información: no hay nada que atrapar.'
@@ -53,7 +58,7 @@
         },
         {
           titulo: 'La pregunta que importa',
-          tono: 'neutro',
+          tono: 'aviso',
           parrafos: [
             '¿Puede un estafador escribir un mensaje igual de limpio? Sí.',
             'Por eso «sin señales» no significa «seguro». Solo significa que no usó las palabras de la lista.'
@@ -99,7 +104,7 @@
       lecciones: [
         {
           titulo: 'Qué ocurrió',
-          tono: 'peligro',
+          tono: 'bien',
           parrafos: [
             'El detector funcionó aquí.',
             'Autoridad: «gerente», «directorio». Urgencia: «hoy», «ahora», «cierre». Beneficio: «bonos».'
@@ -149,7 +154,7 @@
       lecciones: [
         {
           titulo: 'Qué ocurrió',
-          tono: 'aviso',
+          tono: 'mal',
           parrafos: [
             'El detector activó una alerta, pero el mensaje no es una estafa.',
             'Esto se llama falso positivo.'
@@ -166,26 +171,10 @@
         },
         {
           titulo: 'Por qué importa',
-          tono: 'info',
+          tono: 'aviso',
           parrafos: [
             'Si el detector falla así con frecuencia, las personas dejan de confiar en él.',
             'Y cuando dejan de confiar, lo ignoran. También cuando acierta.'
-          ]
-        },
-        {
-          titulo: 'Cómo se enfrenta',
-          tono: 'info',
-          items: [
-            {
-              etiqueta: 'técnica',
-              titulo: 'Clasificador con machine learning',
-              texto: 'Entrenar un modelo con miles de ejemplos reales. El modelo aprende que «vence hoy» de un banco tiene una distribución estadística distinta a «vence hoy» en un mensaje anónimo.'
-            },
-            {
-              etiqueta: 'técnica',
-              titulo: 'Verificar el origen del mensaje',
-              texto: 'SPF confirma que el servidor tiene permiso para enviar desde ese dominio. DKIM es una firma digital que verifica que el mensaje no fue alterado en el camino. DMARC coordina SPF y DKIM, y define qué hacer si alguno falla.'
-            }
           ]
         }
       ]
@@ -228,7 +217,7 @@
       lecciones: [
         {
           titulo: 'Qué ocurrió',
-          tono: 'evasion',
+          tono: 'mal',
           parrafos: [
             'El detector no encontró señales. Pero el mensaje es una estafa.',
             'Esto se llama bypass (evasión).'
@@ -242,29 +231,40 @@
             'No usó «urgente». No mencionó «gerente». No ofreció premios. Usó lenguaje cotidiano de oficina.',
             'Las reglas fijas son predecibles. Si el atacante sabe qué activa el detector, puede escribir el mensaje para evitarlo.'
           ]
-        },
-        {
-          titulo: 'Cómo se enfrenta',
-          tono: 'info',
-          items: [
-            {
-              etiqueta: 'técnica',
-              titulo: 'Clasificador con machine learning',
-              texto: 'Un modelo entrenado con miles de ejemplos aprende patrones estadísticos completos, no palabras sueltas. Un atacante que evita «urgente» no evita el patrón del fraude.'
-            },
-            {
-              etiqueta: 'técnica',
-              titulo: 'Modelos de lenguaje (LLM)',
-              texto: 'Interpretan el significado del mensaje completo, más parecido a como lo lee una persona. ChatGPT y Claude son ejemplos de esta tecnología.'
-            },
-            {
-              etiqueta: 'proceso',
-              titulo: 'Separar la detección de la ejecución',
-              texto: 'Para transferencias y acciones de alto riesgo, ningún detector debería ser la única barrera. Siempre verificar por un canal distinto. Esto no es código: es una política.'
-            }
-          ]
         }
       ]
+    }
+  ];
+
+
+  var CAPAS = [
+    {
+      id: 'origen',
+      tipo: 'técnica',
+      titulo: 'Verificar el origen del correo',
+      texto: 'SPF confirma que el servidor tiene permiso para enviar desde ese dominio. DKIM es una firma digital que verifica que el mensaje no fue alterado en el camino. DMARC coordina SPF y DKIM, y define qué hacer si alguno falla.',
+      resuelve: 'Si el banco del caso 3 es el banco de verdad, su correo pasa la verificación y no hay por qué alarmarse.'
+    },
+    {
+      id: 'ml',
+      tipo: 'técnica',
+      titulo: 'Clasificador con machine learning',
+      texto: 'Un modelo entrenado con miles de ejemplos reales aprende patrones estadísticos completos, no palabras sueltas. Aprende que «vence hoy» de un banco no se parece a «vence hoy» en un mensaje anónimo.',
+      resuelve: 'Menos falsos positivos como el caso 3, y un atacante que evita «urgente» no evita el patrón del fraude del caso 4.'
+    },
+    {
+      id: 'llm',
+      tipo: 'técnica',
+      titulo: 'Modelos de lenguaje (LLM)',
+      texto: 'Interpretan el significado del mensaje completo, más parecido a como lo lee una persona. ChatGPT y Claude son ejemplos de esta tecnología.',
+      resuelve: 'Pueden reconocer el aislamiento del caso 2 y el «primero haz la transferencia» del caso 4, aunque no haya palabras de la lista.'
+    },
+    {
+      id: 'proceso',
+      tipo: 'proceso',
+      titulo: 'Separar la detección de la ejecución',
+      texto: 'Para transferencias y acciones de alto riesgo, ningún detector debería ser la única barrera: siempre se confirma por un canal distinto. Esto no es código, es una política.',
+      resuelve: 'Aunque todo lo demás falle, la transferencia de los casos 2 y 4 no se hace sin una llamada para confirmar.'
     }
   ];
 
@@ -275,7 +275,7 @@
     return puntos >= opcion.min && puntos <= max;
   }
 
-  var Casos = { CASOS: CASOS, acierta: acierta };
+  var Casos = { CASOS: CASOS, CAPAS: CAPAS, acierta: acierta };
 
   if (typeof module === 'object' && module.exports) module.exports = Casos;
   else raiz.Casos = Casos;

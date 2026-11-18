@@ -1,7 +1,7 @@
 #!/bin/bash
 # =============================================================================
 # Escáner de ingeniería social (versión terminal)
-# Proyecto estudiantil de aprendizaje · Licencia MIT
+# Herramienta interactiva de estudio · Licencia MIT
 #
 # Busca palabras asociadas a técnicas de ingeniería social y les asigna puntos.
 # La idea es verlo funcionar en vivo y entender por qué acierta y por qué falla.
@@ -60,7 +60,7 @@ cabecera() {
     clear
     echo -e "${CYAN}┌─────────────────────────────────────────────────────┐${NC}"
     echo -e "${CYAN}│${NC}  ${BLANCO}Escáner de ingeniería social${NC}                       ${CYAN}│${NC}"
-    echo -e "${CYAN}│${NC}  ${GRIS}proyecto de aprendizaje${NC}                            ${CYAN}│${NC}"
+    echo -e "${CYAN}│${NC}  ${GRIS}herramienta interactiva de estudio${NC}                 ${CYAN}│${NC}"
     echo -e "${CYAN}└─────────────────────────────────────────────────────┘${NC}"
     echo ""
 }

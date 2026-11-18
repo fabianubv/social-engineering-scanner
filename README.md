@@ -1,16 +1,20 @@
-![Escáner de ingeniería social](assets/banner.png)
-
 # Escáner de ingeniería social
 
-Un detector de mensajes sospechosos hecho a propósito simple: busca palabras de **urgencia**, **autoridad** y **promesas de beneficio**, y les suma puntos. La idea es verlo funcionar en vivo y entender **por qué acierta** y, sobre todo, **por qué falla**.
+**Herramienta interactiva de estudio** · [abrir en el navegador](https://fabianubv.github.io/social-engineering-scanner/)
 
-Tiene dos versiones con las mismas reglas: una **web interactiva** y el **script de terminal** original.
+**Cómo funciona un detector de phishing por reglas, y por qué no es suficiente.**
 
-![Caso CEO Fraud: el mensaje con las palabras detectadas resaltadas, el puntaje y las frases que el detector no ve](capturas/caso.png)
+Un detector de mensajes sospechosos hecho a propósito simple, convertido en una lección interactiva. No está hecho para proteger tu correo, sino para **desarmar el detector**: ver cómo está construido, verlo acertar y fallar con cuatro casos, y entender qué usan los sistemas reales en su lugar.
 
-## Por qué existe
+![Inicio: el título y los cuatro capítulos de la lección](capturas/inicio.png)
 
-Es un proyecto estudiantil. Quería entender mejor el phishing y la ingeniería social, pero no solo leyendo la teoría: quería ver a un detector equivocarse y entender por qué.
+## Cómo nació
+
+Empezó como un script de terminal (`scanner.sh`). Quería entender el phishing y la ingeniería social construyendo un detector yo mismo, no solo leyendo la teoría.
+
+El detector busca palabras típicas de los engaños y les suma puntos. Al probarlo vi que acertaba en los casos obvios, pero también que alarmaba con correos legítimos y que era fácil escribir una estafa que pasara sin ser detectada. **Esos fallos resultaron ser lo más interesante.**
+
+Por eso lo convertí en una **herramienta interactiva de estudio**: una página web que recorre, paso a paso, cómo funciona el detector y por qué se queda corto, para que cualquiera pueda verlo en vivo y entender el porqué.
 
 Con este proyecto quise entender:
 
@@ -21,51 +25,17 @@ Con este proyecto quise entender:
 - por qué el contexto es tan difícil de capturar con reglas fijas;
 - por qué los sistemas reales necesitan varias capas de análisis.
 
-## Qué hace
-
-- **Cuatro casos guiados** que cuentan una historia: dos veces el detector acierta y dos veces falla.
-- **Antes de cada resultado, tú predices.** Después ves qué palabras encontró, cuántos puntos sumó y si acertaste.
-- **Lo que una persona sí ve:** en cada caso se pueden marcar las frases peligrosas que el detector no reconoce, como «No lo comentes todavía con el resto del equipo».
-- **Mensajes editables:** cambias una palabra y el análisis se actualiza al instante. Sirve para entender, por ejemplo, qué le faltaría al bypass para ser detectado.
-- **Prueba libre:** pegas tu propio mensaje (o abres un `.txt`) y ves cómo lo lee el detector.
-- **Una tabla de 2×2** con los cuatro casos: aciertos, falso positivo y bypass.
-- **Las reglas a la vista:** todas las palabras que busca y cómo cuenta los puntos.
-- Tema claro y oscuro, uso con teclado y diseño adaptado a celular.
-
-## Los cuatro casos
-
-| Caso | Qué pasa | Qué enseña |
-|---|---|---|
-| 1. Correo limpio | Un newsletter real. El detector no encuentra nada. | «Sin señales» no significa «seguro». |
-| 2. CEO Fraud | Alguien finge ser el gerente y pide una transferencia. El detector lo atrapa. | Lo atrapa por las palabras, pero el verdadero peligro (el aislamiento) no lo ve. |
-| 3. Falso positivo | Marketing real de un banco. El detector lo marca como peligroso. | No entiende contexto: si falla mucho, la gente deja de hacerle caso. |
-| 4. Bypass | Una estafa escrita para evitar las palabras de la lista. El detector no ve nada. | Las reglas fijas son predecibles y se pueden esquivar. |
-
-## Usarlo
-
-- **En línea:** [fabian-uv.github.io/social-engineering-scanner](https://fabian-uv.github.io/social-engineering-scanner/).
-- **En tu computador:** descarga el repositorio y haz doble clic en `index.html`. No necesita instalar nada ni conexión a internet.
-- **En la terminal** (Linux o macOS, con Bash):
-
-```bash
-git clone https://github.com/fabian-uv/social-engineering-scanner.git
-```
-
-```bash
-cd social-engineering-scanner && bash scanner.sh
-```
-
-El menú tiene los mismos cuatro casos y dos opciones para analizar un texto propio: pegarlo o cargar un `.txt`.
-
-![El script en la terminal, mostrando las señales detectadas en el caso CEO Fraud](capturas/terminal.png)
-
-## Cómo funciona el detector
+## Cómo funciona el escáner
 
 ```text
-normalizar el texto → buscar palabras de la lista → sumar puntos → mostrar el nivel
+normalizar el texto → comparar con tres listas → sumar puntos → dar un nivel
 ```
 
 - Pasa todo a minúsculas y le quita las tildes, así «ÚLTIMO AVISO» cuenta igual que «ultimo aviso».
+- Compara el texto con tres listas de palabras, una por cada truco típico de la ingeniería social:
+  - **urgencia:** te meten prisa para que no pienses («urgente», «hoy», «último aviso»…);
+  - **autoridad:** fingen ser alguien con poder («gerente», «banco», «jefe»…);
+  - **promesa de beneficio:** algo demasiado bueno para ser verdad («bono», «premio», «gratis»…).
 - Busca **palabras completas**: «bancario» no activa «banco».
 - Acepta plural y femenino: «bono» también detecta «bonos», y «exclusivo», «exclusiva». Solo en las palabras que terminan en *o*, así que «directora» se le escapa. Es otro ejemplo de lo fácil que es evadirlo.
 - Cada palabra suma **1 punto**, aunque aparezca varias veces.
@@ -76,17 +46,69 @@ normalizar el texto → buscar palabras de la lista → sumar puntos → mostrar
 | 1 a 3 | Señales leves |
 | 4 o más | Señales fuertes |
 
-El nivel siempre lo calcula el detector. En los casos guiados se agrega un comentario que explica qué pasó, pero nunca cambia el resultado.
+Eso es todo: no sabe quién envió el mensaje ni qué está pidiendo. Solo cuenta palabras.
 
-![La prueba libre: un mensaje pegado y su análisis en vivo](capturas/tu-mensaje.png)
+## La lección
+
+La web se recorre en cuatro capítulos, en orden:
+
+1. **Cómo funciona.** Un mensaje de ejemplo pasa por el detector paso a paso, con el código de cada paso.
+2. **Cuatro casos**, uno detrás de otro. En cada uno:
+   - **predices** qué va a detectar, antes de ver nada;
+   - **el escáner lee el mensaje** y resalta cada palabra que encuentra, por categoría;
+   - **el resultado:** puntos, nivel, si acertaste y qué es el mensaje en realidad;
+   - **lo que una persona sí ve:** las frases peligrosas que el detector no reconoce;
+   - **por qué pasó**, marcado como acierto o fallo del detector.
+
+   Al final, un resumen: dos aciertos y dos fallos.
+3. **Más allá de las reglas.** Lo que usan los sistemas reales (verificar el origen del correo, machine learning, modelos de lenguaje y procesos) y qué caso resuelve cada uno.
+4. **Pruébalo tú.** Escribe tu propio mensaje (o pega uno real, o abre un `.txt`) y mira en vivo qué detecta. El reto: una estafa que saque 0 puntos.
+
+Se puede usar con el teclado: `Enter` avanza, `←` vuelve, `Esc` lleva al inicio y los números eligen una opción.
+
+![Capítulo 1: el detector compara el mensaje con sus tres listas, con el código al lado](capturas/como-funciona.png)
+
+## Los cuatro casos
+
+| Caso | Qué pasa | Qué enseña |
+|---|---|---|
+| 1. Correo limpio | Un newsletter real. El detector no encuentra nada. **Acierta.** | «Sin señales» no significa «seguro». |
+| 2. CEO Fraud | Alguien finge ser el gerente y pide una transferencia. El detector lo atrapa. **Acierta.** | Lo atrapa por las palabras, pero el verdadero peligro (el aislamiento) no lo ve. |
+| 3. Falso positivo | Marketing real de un banco. El detector lo marca como peligroso. **Falla.** | No entiende contexto: si alarma de más, la gente deja de hacerle caso. |
+| 4. Bypass | Una estafa escrita para evitar las palabras de la lista. El detector no ve nada. **Falla.** | Las reglas fijas son predecibles y se pueden esquivar. |
+
+![Caso CEO Fraud: el mensaje con las palabras detectadas resaltadas por categoría](capturas/analisis.png)
+
+![Caso Bypass: las frases que delatan la estafa, subrayadas y explicadas, aunque el detector no encontró nada](capturas/lo-que-no-ve.png)
 
 ## Lo que aprendí
 
 Detectar phishing solo con palabras clave funciona en los casos obvios, pero falla apenas cambia la forma de escribir el mensaje.
 
-También pude ver cómo aparecen los falsos positivos: un mensaje legítimo puede decir «vence hoy» o «oferta exclusiva» sin ser una estafa.
+La lección principal: **más palabras en la lista no le dan contexto al detector.** Agregar palabras puede arreglar un caso puntual, pero no resuelve ninguno de los dos fallos:
 
-La lección principal fue que **agregar más palabras a la lista no hace que el sistema entienda mejor el mensaje**. Puede arreglar un caso puntual, pero también puede traer errores nuevos. Por eso los sistemas reales combinan varias capas: verificar el origen del correo (SPF, DKIM, DMARC), modelos entrenados con muchos ejemplos y, para lo más delicado, procesos como confirmar una transferencia por otro canal.
+- el **falso positivo** sigue ahí: «vence hoy» suena igual de sospechoso en el correo real del banco que en una estafa;
+- el **bypass** sigue ahí: al atacante le basta con escribir otras palabras.
+
+Y cada palabra nueva puede traer falsos positivos nuevos. Por eso los sistemas reales combinan varias capas: verificar el origen del correo (SPF, DKIM, DMARC), modelos entrenados con muchos ejemplos, modelos de lenguaje que leen el mensaje completo y, para lo más delicado, procesos como confirmar una transferencia por otro canal.
+
+## Usarlo
+
+- **En línea:** [fabianubv.github.io/social-engineering-scanner](https://fabianubv.github.io/social-engineering-scanner/).
+- **En tu computador:** descarga el repositorio y haz doble clic en `index.html`. No necesita instalar nada ni conexión a internet.
+- **En la terminal** (Linux o macOS, con Bash), la versión original:
+
+```bash
+git clone https://github.com/fabianubv/social-engineering-scanner.git
+```
+
+```bash
+cd social-engineering-scanner && bash scanner.sh
+```
+
+El menú tiene los mismos cuatro casos y dos opciones para analizar un texto propio: pegarlo o cargar un `.txt`.
+
+![El script en la terminal, mostrando las señales detectadas en el caso CEO Fraud](capturas/terminal.png)
 
 ## Límites
 
@@ -104,7 +126,7 @@ Las limitaciones de este proyecto me llevaron a hacer **NotPhish**, que mantiene
 
 ## Cómo está hecho
 
-La web es HTML, CSS y JavaScript sin frameworks, sin dependencias y sin paso de compilación. Usa scripts clásicos (no módulos) para que la página abra con doble clic. El script de terminal es Bash, con `grep`, `sed` y `tr`.
+La web es HTML, CSS y JavaScript sin frameworks, sin dependencias y sin paso de compilación. Usa scripts clásicos (no módulos) para que la página abra con doble clic. El script de terminal es Bash, con `grep`, `sed` y `tr`. Web y terminal usan las mismas reglas.
 
 Lo desarrollé con Claude (IA de Anthropic) como asistente de programación: yo definí qué quería explorar y los casos, probé el detector, busqué dónde fallaba y revisé los resultados.
 
@@ -112,9 +134,9 @@ Lo desarrollé con Claude (IA de Anthropic) como asistente de programación: yo 
 |---|---|
 | `index.html` | La página. |
 | `js/motor.js` | Las reglas y el análisis, separados de la pantalla. Es el mismo criterio de `scanner.sh`. |
-| `js/casos.js` | Los cuatro casos: mensajes, preguntas y lecciones. Solo datos; el resultado lo calcula siempre el motor. |
-| `js/app.js` | La interfaz. |
-| `css/estilos.css` | Colores (claro y oscuro) y estilos. |
+| `js/casos.js` | Los cuatro casos (mensajes, preguntas y lecciones) y las capas del capítulo 3. Solo datos; el resultado lo calcula siempre el motor. |
+| `js/app.js` | La interfaz: los cuatro capítulos en una sola secuencia de pantallas, y el teclado. |
+| `css/estilos.css` | Estilos: gris oscuro con verde consola, composición centrada. |
 | `scanner.sh` | La versión de terminal. |
 | `tests/` | Pruebas automáticas. |
 
