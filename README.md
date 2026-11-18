@@ -1,6 +1,6 @@
 # Escáner de ingeniería social
 
-**Herramienta interactiva de estudio** · [abrir en el navegador](https://fabianubv.github.io/social-engineering-scanner/)
+[![herramienta interactiva de estudio](https://img.shields.io/badge/herramienta_interactiva_de_estudio-54d03f)](https://github.com/fabianubv?tab=repositories&q=topic%3Aherramienta-interactiva-de-estudio) [![en línea: abrir](https://img.shields.io/badge/en_l%C3%ADnea-abrir-54d03f)](https://fabianubv.github.io/social-engineering-scanner/) [![licencia: MIT](https://img.shields.io/badge/licencia-MIT-54d03f)](LICENSE)
 
 **Cómo funciona un detector de phishing por reglas, y por qué no es suficiente.**
 
