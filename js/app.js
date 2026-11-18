@@ -280,7 +280,7 @@
     if (paso === 'compara') {
       cuerpo.push(h1('Lo compara con tres listas'));
       cuerpo.push(tuberia([1]));
-      cuerpo.push(p('Tiene una lista de palabras por cada truco típico de la ingeniería social. Busca palabras completas («bancario» no activa «banco») y acepta plural y femenino: «bono» también encuentra «bonos».', 'centro suave'));
+      cuerpo.push(p('Tiene una lista de palabras por cada truco típico de la ingeniería social. Solo cuenta palabras enteras: si en la lista está «banco», no lo encuentra dentro de «bancario», porque es otra palabra. Sí acepta plural y femenino: «bono» también encuentra «bonos».', 'centro suave'));
       cuerpo.push(codigo(
         "const REGLAS = {\n" +
         "  urgencia:  ['urgente', 'hoy', 'ahora', 'ultimo aviso', …],\n" +

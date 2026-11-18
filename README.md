@@ -36,7 +36,7 @@ normalizar el texto → comparar con tres listas → sumar puntos → dar un niv
   - **urgencia:** te meten prisa para que no pienses («urgente», «hoy», «último aviso»…);
   - **autoridad:** fingen ser alguien con poder («gerente», «banco», «jefe»…);
   - **promesa de beneficio:** algo demasiado bueno para ser verdad («bono», «premio», «gratis»…).
-- Busca **palabras completas**: «bancario» no activa «banco».
+- Solo cuenta **palabras enteras**: si en la lista está «banco», no lo encuentra dentro de «bancario», porque es otra palabra.
 - Acepta plural y femenino: «bono» también detecta «bonos», y «exclusivo», «exclusiva». Solo en las palabras que terminan en *o*, así que «directora» se le escapa. Es otro ejemplo de lo fácil que es evadirlo.
 - Cada palabra suma **1 punto**, aunque aparezca varias veces.
 
