@@ -120,10 +120,6 @@ El menú tiene los mismos cuatro casos y dos opciones para analizar un texto pro
 
 Es una herramienta para aprender, **no protege tu correo**.
 
-## Siguiente paso
-
-Las limitaciones de este proyecto me llevaron a hacer **NotPhish**, que mantiene la idea de analizar señales sospechosas, pero suma más reglas, un modelo de machine learning y un sistema híbrido que combina varios resultados. Este escáner fue mi primer acercamiento al problema; NotPhish salió de las preguntas que quedaron después de probarlo.
-
 ## Cómo está hecho
 
 La web es HTML, CSS y JavaScript sin frameworks, sin dependencias y sin paso de compilación. Usa scripts clásicos (no módulos) para que la página abra con doble clic. El script de terminal es Bash, con `grep`, `sed` y `tr`. Web y terminal usan las mismas reglas.
