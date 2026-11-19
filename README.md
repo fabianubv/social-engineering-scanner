@@ -2,19 +2,17 @@
 
 [![herramienta interactiva de estudio](https://img.shields.io/badge/herramienta_interactiva_de_estudio-54d03f)](https://github.com/fabianubv?tab=repositories&q=topic%3Aherramienta-interactiva-de-estudio) [![en línea: abrir](https://img.shields.io/badge/en_l%C3%ADnea-abrir-54d03f)](https://fabianubv.github.io/social-engineering-scanner/) [![licencia: MIT](https://img.shields.io/badge/licencia-MIT-54d03f)](LICENSE)
 
-**Cómo funciona un detector de phishing por reglas, y por qué no es suficiente.**
+Cómo funciona un detector de phishing por reglas, y por qué no alcanza.
 
-Un detector de mensajes sospechosos hecho a propósito simple, convertido en una lección interactiva. No está hecho para proteger tu correo, sino para **desarmar el detector**: ver cómo está construido, verlo acertar y fallar con cuatro casos, y entender qué usan los sistemas reales en su lugar.
+Es un detector de mensajes sospechosos, simple a propósito, convertido en una lección interactiva. No protege tu correo. Sirve para desarmarlo: ver cómo está construido, verlo acertar y fallar con cuatro casos, y conocer lo que usan los sistemas reales en su lugar.
 
 ![Inicio: el título y los cuatro capítulos de la lección](capturas/inicio.png)
 
 ## Cómo nació
 
-Empezó como un script de terminal (`scanner.sh`). Quería entender el phishing y la ingeniería social construyendo un detector yo mismo, no solo leyendo la teoría.
+Empezó como un script de terminal (`scanner.sh`). Quería entender el phishing y la ingeniería social construyendo un detector yo mismo, además de leer la teoría.
 
-El detector busca palabras típicas de los engaños y les suma puntos. Al probarlo vi que acertaba en los casos obvios, pero también que alarmaba con correos legítimos y que era fácil escribir una estafa que pasara sin ser detectada. **Esos fallos resultaron ser lo más interesante.**
-
-Por eso lo convertí en una **herramienta interactiva de estudio**: una página web que recorre, paso a paso, cómo funciona el detector y por qué se queda corto, para que cualquiera pueda verlo en vivo y entender el porqué.
+El detector busca palabras típicas de los engaños y les suma puntos. Al probarlo vi que acertaba en los casos obvios, pero también que alarmaba con correos legítimos y que era fácil escribir una estafa que pasara sin ser detectada. Esos fallos me interesaron más que los aciertos, así que lo convertí en una herramienta interactiva de estudio: una página web que recorre, paso a paso, cómo funciona el detector y dónde se queda corto, con los casos corriendo en vivo.
 
 Con este proyecto quise entender:
 
@@ -36,9 +34,9 @@ normalizar el texto → comparar con tres listas → sumar puntos → dar un niv
   - **urgencia:** te meten prisa para que no pienses («urgente», «hoy», «último aviso»…);
   - **autoridad:** fingen ser alguien con poder («gerente», «banco», «jefe»…);
   - **promesa de beneficio:** algo demasiado bueno para ser verdad («bono», «premio», «gratis»…).
-- Solo cuenta **palabras enteras**: si en la lista está «banco», no lo encuentra dentro de «bancario», porque es otra palabra.
-- Acepta plural y femenino: «bono» también detecta «bonos», y «exclusivo», «exclusiva». Solo en las palabras que terminan en *o*, así que «directora» se le escapa. Es otro ejemplo de lo fácil que es evadirlo.
-- Cada palabra suma **1 punto**, aunque aparezca varias veces.
+- Solo cuenta palabras enteras: si en la lista está «banco», no lo encuentra dentro de «bancario», porque es otra palabra.
+- Acepta plural y femenino: «bono» también detecta «bonos», y «exclusivo», «exclusiva». Solo en las palabras que terminan en *o*, así que «directora» se le escapa.
+- Cada palabra suma 1 punto, aunque aparezca varias veces.
 
 | Puntos | Nivel |
 |---|---|
@@ -46,7 +44,7 @@ normalizar el texto → comparar con tres listas → sumar puntos → dar un niv
 | 1 a 3 | Señales leves |
 | 4 o más | Señales fuertes |
 
-Eso es todo: no sabe quién envió el mensaje ni qué está pidiendo. Solo cuenta palabras.
+No sabe quién envió el mensaje ni qué está pidiendo: solo cuenta palabras.
 
 ## La lección
 
@@ -54,11 +52,11 @@ La web se recorre en cuatro capítulos, en orden:
 
 1. **Cómo funciona.** Un mensaje de ejemplo pasa por el detector paso a paso, con el código de cada paso.
 2. **Cuatro casos**, uno detrás de otro. En cada uno:
-   - **predices** qué va a detectar, antes de ver nada;
-   - **el escáner lee el mensaje** y resalta cada palabra que encuentra, por categoría;
-   - **el resultado:** puntos, nivel, si acertaste y qué es el mensaje en realidad;
-   - **lo que una persona sí ve:** las frases peligrosas que el detector no reconoce;
-   - **por qué pasó**, marcado como acierto o fallo del detector.
+   - predices qué va a detectar, antes de ver nada;
+   - el escáner lee el mensaje y resalta cada palabra que encuentra, por categoría;
+   - ves el resultado: puntos, nivel, si acertaste y qué es el mensaje en realidad;
+   - ves lo que una persona sí nota: las frases peligrosas que el detector no reconoce;
+   - lees por qué pasó, marcado como acierto o fallo del detector.
 
    Al final, un resumen: dos aciertos y dos fallos.
 3. **Más allá de las reglas.** Lo que usan los sistemas reales (verificar el origen del correo, machine learning, modelos de lenguaje y procesos) y qué caso resuelve cada uno.
@@ -85,10 +83,10 @@ Se puede usar con el teclado: `Enter` avanza, `←` vuelve, `Esc` lleva al inici
 
 Detectar phishing solo con palabras clave funciona en los casos obvios, pero falla apenas cambia la forma de escribir el mensaje.
 
-La lección principal: **más palabras en la lista no le dan contexto al detector.** Agregar palabras puede arreglar un caso puntual, pero no resuelve ninguno de los dos fallos:
+Agregar palabras a la lista no le da contexto al detector. Puede arreglar un caso puntual, pero no resuelve ninguno de los dos fallos:
 
-- el **falso positivo** sigue ahí: «vence hoy» suena igual de sospechoso en el correo real del banco que en una estafa;
-- el **bypass** sigue ahí: al atacante le basta con escribir otras palabras.
+- el falso positivo sigue ahí: «vence hoy» suena igual de sospechoso en el correo real del banco que en una estafa;
+- el bypass también: al atacante le basta con escribir otras palabras.
 
 Y cada palabra nueva puede traer falsos positivos nuevos. Por eso los sistemas reales combinan varias capas: verificar el origen del correo (SPF, DKIM, DMARC), modelos entrenados con muchos ejemplos, modelos de lenguaje que leen el mensaje completo y, para lo más delicado, procesos como confirmar una transferencia por otro canal.
 
@@ -118,7 +116,7 @@ El menú tiene los mismos cuatro casos y dos opciones para analizar un texto pro
 - No verifica quién envió el mensaje realmente.
 - No usa machine learning ni modelos de lenguaje.
 
-Es una herramienta para aprender, **no protege tu correo**.
+Es una herramienta para aprender y no protege tu correo.
 
 ## Cómo está hecho
 
@@ -138,7 +136,7 @@ Lo desarrollé con Claude (IA de Anthropic) como asistente de programación: yo 
 
 ### Pruebas
 
-Las pruebas revisan los cuatro casos, los bordes de las reglas (plural, tildes, palabras completas) y que **la web y el script den los mismos puntos**: comparan las listas de palabras y ejecutan `scanner.sh` con los mismos mensajes. Necesitan Node 18 o superior.
+Las pruebas revisan los cuatro casos, los bordes de las reglas (plural, tildes, palabras completas) y que la web y el script den los mismos puntos: comparan las listas de palabras y ejecutan `scanner.sh` con los mismos mensajes. Necesitan Node 18 o superior.
 
 ```bash
 node --test
@@ -146,9 +144,9 @@ node --test
 
 ## Privacidad y seguridad
 
-- **Nada sale de tu navegador.** No hay servidor, cuentas, cookies ni seguimiento. La página tiene una regla de seguridad (una *Content Security Policy*) que le prohíbe conectarse a internet o ejecutar código que no sea el suyo.
-- **Lo que pegas se trata como texto, nunca como código.** Si un mensaje trae algo que parece código de una página web, la app lo muestra tal cual y no lo ejecuta.
-- **En la terminal pasa lo mismo:** el script limpia los caracteres de control antes de mostrar un texto, así un mensaje no puede cambiar los colores ni el título de tu terminal.
+- Nada sale de tu navegador. No hay servidor, cuentas, cookies ni seguimiento. La página tiene una regla de seguridad (una *Content Security Policy*) que le prohíbe conectarse a internet o ejecutar código que no sea el suyo.
+- Lo que pegas se trata como texto. Si un mensaje trae algo que parece código de una página web, la app lo muestra tal cual y no lo ejecuta.
+- En la terminal, el script limpia los caracteres de control antes de mostrar un texto, así un mensaje no puede cambiar los colores ni el título de tu terminal.
 - Los mensajes, nombres y el banco de los ejemplos son ficticios.
 
 ## Licencia
